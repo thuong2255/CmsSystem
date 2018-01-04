@@ -1,0 +1,72 @@
+﻿@model IEnumerable<CmsSystem.Web.Models.RoleVm>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Quản lý Quyền</h3>
+                    <div class="pull-right">
+                        @Html.ActionLink("Thêm", "Create", null, new { @class = "btn btn-success" })
+                    </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 1%">Sửa</th>
+                            <th style="width: 10%">Quyền</th>
+                            <th style="width: 20%">Mô tả</th>
+                            <th style="width: 5%">Xóa</th>
+                            <th style="width: 5%">Phân quyền</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil" })</td>
+
+                                <td>@item.Name</td>
+                                <td>@item.Description</td>
+                                <td><button data-menu-id="@item.Id" class="btn btn-danger js-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                <td>@Html.ActionLink("Phân quyền", "Authorize", new { id = item.Id }, new { @class = "btn btn-primary" })</td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $('.js-delete').on('click', function () {
+        var button = $(this);
+        var data = {
+            id: button.attr("data-menu-id")
+        }
+        if (confirm("Bạn có chắc chắn muốn xóa ?")) {
+            $.ajax({
+                url: '@Url.Action("Delete","Role")',
+                type: "POST",
+                data: data,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status) {
+                        button.parents("tr").remove();
+                        alert("Xóa thành công");
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+    });
+
+</script>
+

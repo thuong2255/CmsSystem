@@ -1,0 +1,134 @@
+﻿@model List<CmsSystem.Web.Models.ActionTreeViewModel>
+
+@{
+    ViewBag.Title = "Authorize";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-6" id="frm-menu">
+            <div class="panel panel-primary">
+                <div class="panel-heading panel-head">Phân quyền Menu</div>
+                <div id="frm-author" class="panel-body">
+                    <form>
+
+                        <div class="tree">
+                            @foreach (var parent in Model)
+                            {
+                                <ul>
+                                    <li>
+                                        <a>
+                                            @*<input type="checkbox" class="tree-checkbox parent"/>*@
+                                            <label>
+                                                @Html.DisplayFor(model => parent.Name)
+                                            </label>
+                                        </a>
+                                        <ul>
+                                            @foreach (var sub in parent.Actions)
+                                            {
+                                                @Html.HiddenFor(model => sub.Id)
+                                                <li>
+                                                    <a>
+                                                        @if (sub.IsGranted)
+                                                        {
+                                                            <input type="checkbox" class="tree-checkbox node-item" value="@sub.Id" checked />
+                                                            <label>
+                                                                @sub.Name.Replace("|-- ", "")
+                                                            </label>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="tree-checkbox node-item" value="@sub.Id" />
+                                                            <label>
+                                                                @sub.Name.Replace("|-- ", "")
+                                                            </label>
+                                                        }
+
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                </ul>
+                            }
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-9"></div>
+                            <div class="col-lg-3">
+                                <input class="btn btn-success" id="btnSubmit" type="button" value="Submit" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading panel-head">Phân quyền Chức năng</div>
+                <div id="frm-function" class="panel-body">
+                    @foreach (var function in @ViewBag.ListFunctionGranted)
+                    {
+                        <div class="form-group">
+                            @if (function.IsGranted)
+                            {
+                                <input type="checkbox" class="minimal" value="@function.Id" checked> @function.Description
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="minimal" value="@function.Id"> @function.Description
+                            }
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var common = {
+        init: function () {
+            common.registerEvent();
+        },
+        registerEvent: function () {
+            $("#btnSubmit").click(function () {
+                common.updateAuthozation();
+            });
+        },
+
+        updateAuthozation: function () {
+            var allValueMenu = [];
+            var allValueFunction = [];
+            $('#frm-menu input:checkbox:checked').each(function () {
+                allValueMenu.push($(this).val());
+            });
+
+            $('#frm-function input:checkbox:checked').each(function () {
+                allValueFunction.push($(this).val());
+            });
+
+            var listMenu = JSON.stringify(allValueMenu);
+            var listFunction = JSON.stringify(allValueFunction);
+
+            $.ajax({
+                url: '/Role/UpdateAuthozation',
+                data: {
+                    listMenu: listMenu,
+                    listFunction: listFunction
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#msg').append(data);
+                },
+                error: function (err) {
+                    alert("Error: " + err.responseText);
+                }
+            });
+        }
+    }
+    common.init();
+</script>

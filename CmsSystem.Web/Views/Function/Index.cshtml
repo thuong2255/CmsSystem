@@ -1,0 +1,65 @@
+﻿@model IEnumerable<CmsSystem.Web.Models.FunctionVm>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading panel-head">Danh sách Function</div>
+                <div class="panel-body">
+                    <div class="pull-left" style="padding-bottom:15px">
+                        @Html.ActionLink("Thêm", "Create", null, new { @class = "btn btn-success" })
+                    </div>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 1%">Sửa</th>
+                            <th style="width: 20%">Code</th>
+                            <th style="width: 20%">Mô tả</th>
+                            <th style="width: 4%">Xóa</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil" })</td>
+                                <td>@item.Code</td>
+                                <td>@item.Description</td>
+                                <td><button data-menu-id="@item.Id" class="btn btn-danger js-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $('.js-delete').on('click', function () {
+        var button = $(this);
+        var data = {
+            id: button.attr("data-menu-id")
+        }
+        if (confirm("Bạn có chắc chắn muốn xóa ?")) {
+            $.ajax({
+                url: '@Url.Action("Delete","Function")',
+                type: "POST",
+                data: data,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status) {
+                        button.parents("tr").remove();
+                        alert("Xóa thành công");
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+    });
+
+</script>
