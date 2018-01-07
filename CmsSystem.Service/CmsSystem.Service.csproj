@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="ActionRoleService.cs" />
     <Compile Include="ActionService.cs" />
+    <Compile Include="CommonService.cs" />
+    <Compile Include="EncryptionService.cs" />
     <Compile Include="FunctionRoleService.cs" />
     <Compile Include="FunctionService.cs" />
     <Compile Include="ProductCategoryService.cs" />
@@ -55,6 +57,10 @@
     <Content Include="UserSystem.Service.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CmsSystem.Common\CmsSystem.Common.csproj">
+      <Project>{BB6DF5D3-1252-4C76-BAAB-E3F1A493980F}</Project>
+      <Name>CmsSystem.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CmsSystem.Data\CmsSystem.Data.csproj">
       <Project>{c9b2aee8-322c-425e-9895-db58bd89f5a7}</Project>
       <Name>CmsSystem.Data</Name>

@@ -101,6 +101,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
@@ -930,6 +938,7 @@
     <Content Include="Assets\plugins\timepicker\bootstrap-timepicker.js" />
     <Content Include="Assets\plugins\timepicker\bootstrap-timepicker.min.css" />
     <Content Include="Assets\plugins\timepicker\bootstrap-timepicker.min.js" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
@@ -945,6 +954,7 @@
     <Compile Include="Controllers\FunctionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -954,12 +964,14 @@
     <Compile Include="Models\ActionVm.cs" />
     <Compile Include="Models\FunctionRoleVm.cs" />
     <Compile Include="Models\FunctionVm.cs" />
+    <Compile Include="Models\LoginVm.cs" />
     <Compile Include="Models\ProductCategoryVm.cs" />
     <Compile Include="Models\ProductVm.cs" />
     <Compile Include="Models\RightAction.cs" />
     <Compile Include="Models\RightFunction.cs" />
     <Compile Include="Models\RoleUserVm.cs" />
     <Compile Include="Models\RoleVm.cs" />
+    <Compile Include="Models\UserIndexViewModel.cs" />
     <Compile Include="Models\UserVm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -1020,6 +1032,9 @@
     <Content Include="Views\Function\Index.cshtml" />
     <Content Include="Views\Function\Create.cshtml" />
     <Content Include="Views\Function\Edit.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

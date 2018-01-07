@@ -36,5 +36,22 @@ namespace CmsSystem.Web.Infrastructure.Extensions
             function.CreatedBy = functionVm.CreatedBy;
             function.CreatedDate = functionVm.CreatedDate;
         }
+
+        public static void UpdateUser(this User user, UserVm useVm)
+        {
+            user.Id = useVm.Id;
+            user.UserName = useVm.UserName;
+            user.Password = useVm.Password;
+            user.Salt = useVm.Salt;
+            user.Salt = useVm.Salt;
+            user.Address = useVm.Salt;
+            user.Email = useVm.Email;
+            user.Mobile = useVm.Mobile;
+            user.Description = useVm.Description;
+            user.IsAdmin = useVm.IsAdmin;
+            user.Status = useVm.Status;
+            user.CreatedDate = useVm.CreatedDate;
+            user.LastLogin = useVm.LastLogin;
+        }
     }
 }

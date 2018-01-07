@@ -15,5 +15,7 @@ namespace CmsSystem.Common.Constants
 
         public const string CreateError = "Thêm không thành công";
         public const string EditError = "Sửa không thành công";
+
+        public const string ExistingUser = "Tài khoản đã tồn tại. Vui lòng chọn tên tài khoản khác";
     }
 }

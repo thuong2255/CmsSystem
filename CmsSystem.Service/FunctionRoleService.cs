@@ -1,6 +1,8 @@
 ﻿using CmsSystem.Data.Infrastructure;
 using CmsSystem.Data.Repositories;
 using CmsSystem.Model.Models;
+using System.Collections.Generic;
+using System;
 
 namespace CmsSystem.Service
 {
@@ -9,6 +11,8 @@ namespace CmsSystem.Service
         void AddFunctionToRole(FunctionRole functionRole);
 
         void RemoveFunctionRoleByRoleId(int roleId);
+
+        IEnumerable<FunctionRole> GetFunctionRolesByRoleId(int id);
 
         void Save();
     }
@@ -27,6 +31,11 @@ namespace CmsSystem.Service
         public void AddFunctionToRole(FunctionRole functionRole)
         {
             _functionRoleRepository.Add(functionRole);
+        }
+
+        public IEnumerable<FunctionRole> GetFunctionRolesByRoleId(int id)
+        {
+            return _functionRoleRepository.GetMulti(x => x.RoleId == id);
         }
 
         public void RemoveFunctionRoleByRoleId(int roleId)

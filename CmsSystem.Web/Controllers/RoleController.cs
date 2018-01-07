@@ -19,13 +19,15 @@ namespace CmsSystem.Web.Controllers
         private readonly IActionService _actionService;
         private readonly IFunctionService _functionService;
         private readonly IActionRoleService _acctionRoleService;
+        private readonly IFunctionRoleService _functionRoleService;
 
-        public RoleController(IRoleService roleService, IActionService actionService, IFunctionService functionService, IActionRoleService acctionRoleService)
+        public RoleController(IRoleService roleService, IActionService actionService, IFunctionService functionService, IActionRoleService acctionRoleService, IFunctionRoleService functionRoleService)
         {
             _roleService = roleService;
             _actionService = actionService;
             _functionService = functionService;
             _acctionRoleService = acctionRoleService;
+            _functionRoleService = functionRoleService;
         }
 
         // GET: Role
@@ -114,11 +116,11 @@ namespace CmsSystem.Web.Controllers
 
             //Lấy danh sách action đã được gán cho Role
             var listActionGranted = (from a in _actionService.GetListActionByRoleId(id)
-                                     select new RightAction { Id = a.Id, ParentId = a.ParentId ?? 0 ,Name = a.Name, IsGranted = true }).ToList();
+                                     select new RightAction { Id = a.Id, ParentId = a.ParentId ?? 0, Name = a.Name, IsGranted = true }).ToList();
 
             //Lấy tất cả danh sách action
             var listAction = (from b in _actionService.GetAll()
-                              select new RightAction { Id = b.Id,ParentId = b.ParentId ?? 0 ,Name = b.Name, IsGranted = false }).ToList();
+                              select new RightAction { Id = b.Id, ParentId = b.ParentId ?? 0, Name = b.Name, IsGranted = false }).ToList();
 
             //Lấy tất cả danh sách function được gán cho Role
             var listFunctionGranted = (from c in _functionService.GetListFunctionByRoleId(id)
@@ -168,17 +170,60 @@ namespace CmsSystem.Web.Controllers
         public ActionResult UpdateAuthozation(string listMenu, string listFunction)
         {
 
-            var CurrentRoleId = Session["CurrentRoleId"];
+            var currentRoleId = (int)Session["CurrentRoleId"];
 
-            var listMenuId =  new JavaScriptSerializer().Deserialize<List<int>>(listMenu);
+            var listMenuId = new JavaScriptSerializer().Deserialize<List<int>>(listMenu);
 
             var listFunctionId = new JavaScriptSerializer().Deserialize<List<int>>(listFunction);
 
 
+            if (listMenuId.Count == 0 && _acctionRoleService.GetActionRolesByRoleId(currentRoleId).ToList().Count > 0)
+            {
+                _acctionRoleService.RemoveActionRoleByRoleId(currentRoleId);
+                _acctionRoleService.Save();
+            }
 
+            if (listMenuId.Count > 0)
+            {
+                _acctionRoleService.RemoveActionRoleByRoleId(currentRoleId);
 
+                foreach (var item in listMenuId)
+                {
+                    var actionRole = new ActionRole
+                    {
+                        RoleId = currentRoleId,
+                        ActionId = item,
+                        CreatedBy = 1,
+                        CreatedDate = DateTime.Now
+                    };
+                    _acctionRoleService.AddActionToRole(actionRole);
+                }
+                _acctionRoleService.Save();
+            }
 
-            return View();
+            if (listFunctionId.Count == 0 && _functionRoleService.GetFunctionRolesByRoleId(currentRoleId).ToList().Count > 0)
+            {
+                _functionRoleService.RemoveFunctionRoleByRoleId(currentRoleId);
+                _acctionRoleService.Save();
+            }
+
+            if (listFunctionId.Count > 0)
+            {
+                _functionRoleService.RemoveFunctionRoleByRoleId(currentRoleId);
+                foreach (var item in listFunctionId)
+                {
+                    var functionRole = new FunctionRole
+                    {
+                        RoleId = currentRoleId,
+                        FunctionId = item,
+                        CreatedBy = 1,
+                        CreatedDate = DateTime.Now
+                    };
+                    _functionRoleService.AddFunctionToRole(functionRole);
+                }
+                _functionRoleService.Save();
+            }
+            return Json(new { status = true }, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -1,8 +1,43 @@
-﻿
+﻿@model IEnumerable<CmsSystem.Web.Models.UserVm>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Home</h2>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading panel-head">Đăng nhập gần nhất</div>
+                <div class="panel-body">
+                    @*<div class="pull-left" style="padding-bottom:15px">
+                        @Html.ActionLink("Thêm", "Create", null, new { @class = "btn btn-success" })
+                    </div>*@
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 15%">Họ và tên</th>
+                            <th style="width: 10%">Tên đăng nhập</th>
+                            <th style="width: 15%">Điện thoại</th>
+                            <th style="width: 15%">Email</th>
+                            <th style="width: 20%">Đăng nhập lần cuối</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                @*<td>@Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil" })</td>*@
+
+                                <td>@item.FullName</td>
+                                <td>@item.UserName</td>
+                                <td>@item.Mobile</td>
+                                <td>@item.Email</td>
+                                <td>@item.LastLogin</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 

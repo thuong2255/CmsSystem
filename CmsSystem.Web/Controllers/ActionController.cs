@@ -1,12 +1,11 @@
-﻿using CmsSystem.Common.Constants;
+﻿using AutoMapper;
+using CmsSystem.Common.Constants;
 using CmsSystem.Service;
 using CmsSystem.Web.Infrastructure.Extensions;
 using CmsSystem.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using AutoMapper;
-using CmsSystem.Model.Models;
 
 namespace CmsSystem.Web.Controllers
 {
@@ -83,7 +82,6 @@ namespace CmsSystem.Web.Controllers
             ViewBag.ParentId = new SelectList(_actionService.GetAll(), "Id", "Name");
             return View();
         }
-
 
         [HttpPost]
         public ActionResult Delete(int id)

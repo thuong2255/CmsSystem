@@ -20,6 +20,7 @@ namespace CmsSystem.Service
 
         IEnumerable<Function> GetListFunctionByRoleId(int id);
 
+
         void Save();
     }
 

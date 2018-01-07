@@ -24,9 +24,22 @@ namespace CmsSystem.Web
             );
 
             routes.MapRoute(
+                name: "Login",
+                url: "dang-nhap",
+                defaults: new { controller = "Home", action = "Login" },
+                namespaces: new string[] { "CmsSystem.Web.Controllers" }
+            );
+
+            routes.MapRoute(
                 name: "Function",
                 url: "quan-ly-chuc-nang",
                 defaults: new { controller = "Function", action = "Index" },
+                namespaces: new string[] { "CmsSystem.Web.Controllers" }
+            );
+            routes.MapRoute(
+                name: "User",
+                url: "quan-ly-nguoi-dung",
+                defaults: new { controller = "User", action = "Index" },
                 namespaces: new string[] { "CmsSystem.Web.Controllers" }
             );
 
