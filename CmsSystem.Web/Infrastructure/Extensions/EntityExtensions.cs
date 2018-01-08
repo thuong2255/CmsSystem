@@ -40,11 +40,11 @@ namespace CmsSystem.Web.Infrastructure.Extensions
         public static void UpdateUser(this User user, UserVm useVm)
         {
             user.Id = useVm.Id;
+            user.FullName = useVm.FullName;
             user.UserName = useVm.UserName;
             user.Password = useVm.Password;
             user.Salt = useVm.Salt;
-            user.Salt = useVm.Salt;
-            user.Address = useVm.Salt;
+            user.Address = useVm.Address;
             user.Email = useVm.Email;
             user.Mobile = useVm.Mobile;
             user.Description = useVm.Description;

@@ -1,15 +1,16 @@
 ﻿using CmsSystem.Data.Infrastructure;
 using CmsSystem.Data.Repositories;
 using CmsSystem.Model.Models;
-using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace CmsSystem.Service
 {
     public interface IUserService
     {
         IEnumerable<User> GetAllUser();
+
+        User GetByUserId(int id);
 
         void Add(User user);
 
@@ -59,12 +60,36 @@ namespace CmsSystem.Service
                 Password = _encryptionService.EncryptPassword(user.Password, passwordSalt),
                 CreatedDate = DateTime.Now
             };
-
+            _userRepository.Add(entity);
         }
 
         public void Update(User user)
         {
-            _userRepository.Update(user);
+            var userInDb = _userRepository.GetSingleById(user.Id);
+
+            if(string.Equals(userInDb.Password, user.Password))
+            {
+                _userRepository.Update(user);
+            }
+            else
+            {
+                var passwordSalt = _encryptionService.CreateSalt();
+                var entity = new User
+                {
+                    UserName = user.UserName,
+                    FullName = user.FullName,
+                    Address = user.Address,
+                    Mobile = user.Mobile,
+                    Description = user.Description,
+                    Salt = passwordSalt,
+                    Email = user.Email,
+                    IsAdmin = user.IsAdmin,
+                    Status = user.Status,
+                    Password = _encryptionService.EncryptPassword(user.Password, passwordSalt),
+                    CreatedDate = DateTime.Now
+                };
+                _userRepository.Update(entity);
+            }
         }
 
         public void Delete(int id)
@@ -87,6 +112,11 @@ namespace CmsSystem.Service
             var user = _userRepository.GetSingleByCondition(x => x.UserName == userName);
 
             return string.Equals(_encryptionService.EncryptPassword(password, user.Salt), user.Password);
+        }
+
+        public User GetByUserId(int id)
+        {
+            return _userRepository.GetSingleById(id);
         }
     }
 }

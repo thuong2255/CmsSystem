@@ -42,7 +42,7 @@ namespace CmsSystem.Web.Controllers
                 viewModel.Search = search;
             }
 
-            const int PageItems = 10;
+            const int PageItems = 3;
             int currentPage = page ?? 1;
  
             viewModel.UsersVm = usersVm.ToPagedList(currentPage, PageItems);
@@ -74,10 +74,62 @@ namespace CmsSystem.Web.Controllers
                 user.UpdateUser(userVm);
                 _userService.Add(user);
                 _userService.Save();
-                TempData["MessageError"] = Message.CreateSuccess;
+                TempData["MessageSuccess"] = Message.CreateSuccess;
+                return RedirectToAction("Index");
             }
+            TempData["MessageError"] = Message.CreateError;
+            ViewBag.Status = new SelectList(_commonService.GetStatusUser(), "Value", "Name");
             return View();
         }
 
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var user = _userService.GetByUserId(id);
+
+            if(user == null)
+            {
+                return HttpNotFound();
+            }
+            var userVm = Mapper.Map<User, UserVm>(user);
+
+            userVm.Password = null;
+
+            ViewBag.Status = new SelectList(_commonService.GetStatusUser(), "Value", "Name", userVm.Status);
+
+            return View(userVm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(UserVm userVm)
+        {
+            if(string.IsNullOrEmpty(userVm.Password))
+            {
+                var user = _userService.GetByUserId(userVm.Id);
+                userVm.Password = user.Password;
+            }
+
+            if(ModelState.IsValid)
+            {
+                if (_userService.CheckExistingUser(userVm.UserName))
+                {
+                    TempData["MessageError"] = Message.ExistingUser;
+                    ViewBag.Status = new SelectList(_commonService.GetStatusUser(), "Value", "Name", userVm.Status);
+                    return View();
+                }
+
+                var user = new User();
+                user.UpdateUser(userVm);
+
+                _userService.Update(user);
+                _userService.Save();
+                TempData["MessageSuccess"] = Message.EditSuccess;
+                return RedirectToAction("Index");
+            }
+            ViewBag.Status = new SelectList(_commonService.GetStatusUser(), "Value", "Name", userVm.Status);
+            TempData["MessageError"] = Message.EditError;
+            return View();
+        }
     }
 }
