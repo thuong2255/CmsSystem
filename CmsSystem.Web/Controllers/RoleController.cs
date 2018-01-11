@@ -10,9 +10,11 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Linq;
 using System.Web.Script.Serialization;
+using CmsSystem.Web.CustomeAuthosize;
 
 namespace CmsSystem.Web.Controllers
 {
+    [CustomeAuthorize]
     public class RoleController : Controller
     {
         private readonly IRoleService _roleService;

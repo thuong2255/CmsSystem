@@ -22,21 +22,6 @@
 
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
 
-
-
-    <!--Kendo-->
-    @*<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.common.min.css">
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.rtl.min.css">
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.default.min.css">
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.mobile.all.min.css">
-
-    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2017.3.1026/js/angular.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2017.3.1026/js/jszip.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2017.3.1026/js/kendo.all.min.js"></script>
-	<script src="https://kendo.cdn.telerik.com/2017.3.1026/js/kendo.aspnetmvc.min.js"></script>*@
-
-
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <!-- Site wrapper -->
@@ -65,7 +50,10 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="~/Assets/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Alexander Pierce</span>
+                                @if (Session["UserName"] != null)
+                                {
+                                    <span class="hidden-xs">@Session["UserName"]</span>
+                                }
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->

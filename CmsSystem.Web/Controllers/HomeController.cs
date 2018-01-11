@@ -4,9 +4,11 @@ using System.Web.Mvc;
 using CmsSystem.Model.Models;
 using AutoMapper;
 using CmsSystem.Web.Models;
+using CmsSystem.Web.CustomeAuthosize;
 
 namespace CmsSystem.Web.Controllers
 {
+    [CustomeAuthorize]
     public class HomeController : Controller
     {
         private readonly IRoleService _roleService;
@@ -20,27 +22,10 @@ namespace CmsSystem.Web.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginVm loginVm)
-        {
-            if(ModelState.IsValid)
-            {
-                return RedirectToAction("Index");
-            }
-            return View();
-        }
-
         // GET: Home
         public ActionResult Index()
         {
-            var user = _userService.GetAllUser();
+            var user = _userService.GetUsersLastLogin();
             var userVm = Mapper.Map<IEnumerable<User>, IEnumerable<UserVm>>(user);
             return View(userVm);
         }

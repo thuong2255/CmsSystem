@@ -2,6 +2,7 @@
 using CmsSystem.Common.Constants;
 using CmsSystem.Model.Models;
 using CmsSystem.Service;
+using CmsSystem.Web.CustomeAuthosize;
 using CmsSystem.Web.Infrastructure.Extensions;
 using CmsSystem.Web.Models;
 using System;
@@ -10,6 +11,7 @@ using System.Web.Mvc;
 
 namespace CmsSystem.Web.Controllers
 {
+    [CustomeAuthorize]
     public class FunctionController : Controller
     {
         private readonly IFunctionService _functionService;

@@ -942,9 +942,6 @@
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
-    <Content Include="scripts\kendo.all.min.js" />
-    <Content Include="scripts\kendo.aspnetmvc.min.js" />
-    <Content Include="scripts\kendo.modernizr.custom.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -953,8 +950,10 @@
     <Compile Include="Controllers\ActionController.cs" />
     <Compile Include="Controllers\FunctionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="CustomeAuthorize\CustomeAuthorize.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -969,6 +968,7 @@
     <Compile Include="Models\ProductVm.cs" />
     <Compile Include="Models\RightAction.cs" />
     <Compile Include="Models\RightFunction.cs" />
+    <Compile Include="Models\RightRole.cs" />
     <Compile Include="Models\RoleUserVm.cs" />
     <Compile Include="Models\RoleVm.cs" />
     <Compile Include="Models\UserIndexViewModel.cs" />
@@ -1014,28 +1014,17 @@
     <Content Include="Views\Action\Create.cshtml" />
     <Content Include="Views\Action\Edit.cshtml" />
     <Content Include="Views\Role\Index.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Currency.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Email.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\GridForeignKey.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Integer.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Number.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Url.cshtml" />
     <Content Include="Views\Role\Create.cshtml" />
     <Content Include="Views\Role\Edit.cshtml" />
     <Content Include="Views\Role\Authorize.cshtml" />
     <Content Include="Views\Function\Index.cshtml" />
     <Content Include="Views\Function\Create.cshtml" />
     <Content Include="Views\Function\Edit.cshtml" />
-    <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\User\Authorize.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1045,6 +1034,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CmsSystem.Common\CmsSystem.Common.csproj">

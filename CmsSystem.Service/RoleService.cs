@@ -11,6 +11,8 @@ namespace CmsSystem.Service
     {
         IEnumerable<Role> GetAll();
 
+        IEnumerable<Role> GetListRoleByUserId(int userId);
+
         Role GetSingleById(int id);
 
         void Add(Role role);
@@ -46,6 +48,11 @@ namespace CmsSystem.Service
         public IEnumerable<Role> GetAll()
         {
             return _roleRepository.GetAll();
+        }
+
+        public IEnumerable<Role> GetListRoleByUserId(int userId)
+        {
+            return _roleRepository.GetListRoleByUserId(userId);
         }
 
         public Role GetSingleById(int id)

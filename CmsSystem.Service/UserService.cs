@@ -10,7 +10,11 @@ namespace CmsSystem.Service
     {
         IEnumerable<User> GetAllUser();
 
+        IEnumerable<User> GetUsersLastLogin();
+
         User GetByUserId(int id);
+
+        User GetUserByUserName(string name);
 
         void Add(User user);
 
@@ -65,31 +69,7 @@ namespace CmsSystem.Service
 
         public void Update(User user)
         {
-            var userInDb = _userRepository.GetSingleById(user.Id);
-
-            if(string.Equals(userInDb.Password, user.Password))
-            {
-                _userRepository.Update(user);
-            }
-            else
-            {
-                var passwordSalt = _encryptionService.CreateSalt();
-                var entity = new User
-                {
-                    UserName = user.UserName,
-                    FullName = user.FullName,
-                    Address = user.Address,
-                    Mobile = user.Mobile,
-                    Description = user.Description,
-                    Salt = passwordSalt,
-                    Email = user.Email,
-                    IsAdmin = user.IsAdmin,
-                    Status = user.Status,
-                    Password = _encryptionService.EncryptPassword(user.Password, passwordSalt),
-                    CreatedDate = DateTime.Now
-                };
-                _userRepository.Update(entity);
-            }
+            _userRepository.Update(user);
         }
 
         public void Delete(int id)
@@ -117,6 +97,16 @@ namespace CmsSystem.Service
         public User GetByUserId(int id)
         {
             return _userRepository.GetSingleById(id);
+        }
+
+        public User GetUserByUserName(string name)
+        {
+            return _userRepository.GetSingleByCondition(x => x.UserName == name);
+        }
+
+        public IEnumerable<User> GetUsersLastLogin()
+        {
+            return _userRepository.GetMulti(x => x.LastLogin.HasValue);
         }
     }
 }

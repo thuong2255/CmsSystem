@@ -2,6 +2,7 @@
 using CmsSystem.Common.Constants;
 using CmsSystem.Model.Models;
 using CmsSystem.Service;
+using CmsSystem.Web.CustomeAuthosize;
 using CmsSystem.Web.Infrastructure.Extensions;
 using CmsSystem.Web.Models;
 using PagedList;
@@ -13,15 +14,18 @@ using System.Web.Mvc;
 
 namespace CmsSystem.Web.Controllers
 {
+    [CustomeAuthorize]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
         private readonly ICommonService _commonService;
+        private readonly IRoleService _roleService;
 
-        public UserController(IUserService userService, ICommonService commonService)
+        public UserController(IUserService userService, ICommonService commonService, IRoleService roleService)
         {
             _userService = userService;
             _commonService = commonService;
+            _roleService = roleService;
         }
 
         [HttpGet]
@@ -93,8 +97,6 @@ namespace CmsSystem.Web.Controllers
             }
             var userVm = Mapper.Map<User, UserVm>(user);
 
-            userVm.Password = null;
-
             ViewBag.Status = new SelectList(_commonService.GetStatusUser(), "Value", "Name", userVm.Status);
 
             return View(userVm);
@@ -104,12 +106,6 @@ namespace CmsSystem.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(UserVm userVm)
         {
-            if(string.IsNullOrEmpty(userVm.Password))
-            {
-                var user = _userService.GetByUserId(userVm.Id);
-                userVm.Password = user.Password;
-            }
-
             if(ModelState.IsValid)
             {
                 if (_userService.CheckExistingUser(userVm.UserName))
@@ -130,6 +126,38 @@ namespace CmsSystem.Web.Controllers
             ViewBag.Status = new SelectList(_commonService.GetStatusUser(), "Value", "Name", userVm.Status);
             TempData["MessageError"] = Message.EditError;
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            var user = _userService.GetByUserId(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            _userService.Delete(user.Id);
+            _userService.Save();
+            return Json(new { status = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Authorize(int id)
+        {
+            var listRoleGranted = (from a in _roleService.GetListRoleByUserId(id)
+                                   select new RightRole { Id = a.Id, Description = a.Description, IsGranted = true, Name = a.Name }).ToList();
+
+            var listAllRole = (from b in _roleService.GetAll()
+                               select new RightRole { Id = b.Id, Description = b.Description, IsGranted = false, Name = b.Name }).ToList();
+
+            foreach(var item in listAllRole)
+            {
+                if(!listRoleGranted.Select(x => x.Id).Contains(item.Id))
+                {
+                    listRoleGranted.Add(item);
+                }
+            }
+
+            return View(listRoleGranted);
         }
     }
 }
