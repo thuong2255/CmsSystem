@@ -5,6 +5,7 @@ using CmsSystem.Model.Models;
 using AutoMapper;
 using CmsSystem.Web.Models;
 using CmsSystem.Web.CustomeAuthosize;
+using System.Linq;
 
 namespace CmsSystem.Web.Controllers
 {
@@ -32,14 +33,36 @@ namespace CmsSystem.Web.Controllers
 
         public ActionResult Menu()
         {
-            var parentMenu = _actionService.GetMenuParent();
+            var userId = (int)Session["UserId"];
+
+
+            var user = _userService.GetByUserId(userId);
+
+            IEnumerable<Action> parentMenu = Enumerable.Empty<Action>();
+
+            if (user.IsAdmin)
+            {
+                parentMenu = _actionService.GetMenuParent();
+            }
+            else
+            {
+                parentMenu = _actionService.GetMenuParentByUserId(userId);
+            }
+
+
             return PartialView(parentMenu);
         }
 
 
         public IEnumerable<Action> GetSubMenu(int parentId)
         {
-            return _actionService.GetSubMenu(parentId);
+            var userId = (int)Session["UserId"];
+            var user = _userService.GetByUserId(userId);
+
+            if (user.IsAdmin)
+                return _actionService.GetSubMenu(parentId);
+
+            return _actionService.GetSubMenuByUserId(userId);
         }
     }
 }

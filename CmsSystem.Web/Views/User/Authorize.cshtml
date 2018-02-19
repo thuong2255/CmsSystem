@@ -10,7 +10,7 @@
         <div class="col-md-12">
             <div class="panel panel-primary">
                 <div class="panel-heading panel-head">Gán quyền cho User</div>
-                <div id="frm-function" class="panel-body">
+                <div id="frm-role" class="panel-body">
                     @foreach (var item in Model)
                     {
                         <div class="form-group">
@@ -38,4 +38,44 @@
         </div>
     </div>
 </section>
+
+<script>
+    var common = {
+        init: function () {
+            common.registerEvent();
+        },
+        registerEvent: function () {
+            $("#btnSubmit").click(function () {
+                common.updateAuthozation();
+            });
+        },
+
+        updateAuthozation: function () {
+            var allRole = [];
+            $('#frm-role input:checkbox:checked').each(function () {
+                allRole.push($(this).val());
+            });
+
+            var listRole = JSON.stringify(allRole);
+
+            $.ajax({
+                url: '/User/UpdateAuthozation',
+                data: {
+                    listRole: listRole
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status) {
+                        alert('Cập nhật quyền thành công');
+                    }
+                },
+                error: function (err) {
+                    alert("Error: " + err.responseText);
+                }
+            });
+        }
+    }
+    common.init();
+</script>
 

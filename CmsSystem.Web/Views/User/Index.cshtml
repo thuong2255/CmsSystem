@@ -81,5 +81,31 @@
     </div>
 </section>
 
+<script type="text/javascript">
+    $('.js-delete').on('click', function () {
+        var button = $(this);
+        var data = {
+            id: button.attr("data-menu-id")
+        }
+        if (confirm("Bạn có chắc chắn muốn xóa ?")) {
+            $.ajax({
+                url: '@Url.Action("Delete","User")',
+                type: "POST",
+                data: data,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status) {
+                        button.parents("tr").remove();
+                        alert("Xóa thành công");
+                    }
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+    });
+</script>
+
 
 

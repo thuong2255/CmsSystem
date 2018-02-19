@@ -22,6 +22,9 @@ namespace CmsSystem.Service
 
         List<Model.Models.Action> GetSubMenu(int parentId);
 
+        List<Model.Models.Action> GetMenuParentByUserId(int userId);
+        List<Model.Models.Action> GetSubMenuByUserId(int userId);
+
         IEnumerable<Model.Models.Action> GetListActionByRoleId(int id);
 
         void Save();
@@ -80,6 +83,24 @@ namespace CmsSystem.Service
         public IEnumerable<Model.Models.Action> GetListActionByRoleId(int id)
         {
             return _actionRepository.GetListActionByRoleId(id);
+        }
+
+        public List<Model.Models.Action> GetSubMenuByUserId(int userId)
+        {
+            return _actionRepository.GetListActionByUserId(userId).ToList();
+        }
+
+        public List<Model.Models.Action> GetMenuParentByUserId(int userId)
+        {
+            var listSub = _actionRepository.GetListActionByUserId(userId);
+
+            var result = new List<Model.Models.Action>();
+
+            foreach(var item in listSub)
+            {
+                result.Add(_actionRepository.GetMulti(x => x.Id == item.ParentId).First());
+            }
+            return result.GroupBy(x => x.Id).Select(y => y.First()).ToList();
         }
     }
 }

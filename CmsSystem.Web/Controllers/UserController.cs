@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace CmsSystem.Web.Controllers
 {
@@ -20,12 +21,14 @@ namespace CmsSystem.Web.Controllers
         private readonly IUserService _userService;
         private readonly ICommonService _commonService;
         private readonly IRoleService _roleService;
+        private readonly IRoleUserService _roleUserService;
 
-        public UserController(IUserService userService, ICommonService commonService, IRoleService roleService)
+        public UserController(IUserService userService, ICommonService commonService, IRoleService roleService, IRoleUserService roleUserService)
         {
             _userService = userService;
             _commonService = commonService;
             _roleService = roleService;
+            _roleUserService = roleUserService;
         }
 
         [HttpGet]
@@ -108,13 +111,6 @@ namespace CmsSystem.Web.Controllers
         {
             if(ModelState.IsValid)
             {
-                if (_userService.CheckExistingUser(userVm.UserName))
-                {
-                    TempData["MessageError"] = Message.ExistingUser;
-                    ViewBag.Status = new SelectList(_commonService.GetStatusUser(), "Value", "Name", userVm.Status);
-                    return View();
-                }
-
                 var user = new User();
                 user.UpdateUser(userVm);
 
@@ -143,6 +139,9 @@ namespace CmsSystem.Web.Controllers
 
         public ActionResult Authorize(int id)
         {
+
+            Session["SelectedUserId"] = id;
+
             var listRoleGranted = (from a in _roleService.GetListRoleByUserId(id)
                                    select new RightRole { Id = a.Id, Description = a.Description, IsGranted = true, Name = a.Name }).ToList();
 
@@ -158,6 +157,41 @@ namespace CmsSystem.Web.Controllers
             }
 
             return View(listRoleGranted);
+        }
+
+        [HttpGet]
+        public ActionResult UpdateAuthozation(string listRole)
+        {
+            var listRoleId = new JavaScriptSerializer().Deserialize<List<int>>(listRole);
+
+            var userLoginId = (int)Session["UserId"];
+            var SelectedUserId = (int)Session["SelectedUserId"];
+
+            if (listRoleId.Count == 0 && _roleUserService.GetRoleUsersByUserId(SelectedUserId).ToList().Count > 0)
+            {
+                _roleUserService.RemoveRoleUserByUserId(SelectedUserId);
+                _roleUserService.Save();
+            }
+
+            if(listRoleId.Count > 0)
+            {
+                _roleUserService.RemoveRoleUserByUserId(SelectedUserId);
+
+                foreach(var item in listRoleId)
+                {
+                    var roleUser = new RoleUser
+                    {
+                        UserId = SelectedUserId,
+                        RoleId = item,
+                        CreatedBy = userLoginId,
+                        CreatedDate = DateTime.Now
+                    };
+                    _roleUserService.Add(roleUser);
+                }
+                _roleUserService.Save();
+            }
+
+            return Json(new { status = true }, JsonRequestBehavior.AllowGet);
         }
     }
 }
